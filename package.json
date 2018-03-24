@@ -1,0 +1,25 @@
+{
+  "name": "pythonnode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Biruk",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-fileupload": "^0.4.0",
+    "jwt-simple": "^0.5.1",
+    "mongoose": "^4.13.5",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1",
+    "socket.io": "^2.0.4",
+    "socketio-auth": "^0.1.0",
+    "socketio-jwt": "^4.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  }
+}

@@ -117,6 +117,8 @@ exports.getConvList = (req, res, next) => {
             //it can easly be converted to ready to use ConvItemBasics
             findAllPrivateLists(convLists[1], convLists[0])
                 .then((allPrivateLists) => {
+                    console.log('allList');
+                    console.log(allLists);
                     allLists.push(allPrivateLists);
                     return findAllGroupLists(convLists[2])
                 })

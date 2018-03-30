@@ -62,7 +62,7 @@ const findAllPrivateLists = (privateList, myId) => {
                         var e = new ConvItemBasic(
                             convitem._id,
                             basicData.name,
-                            basicData.profPic, 
+                            basicData.avatar, 
                             convitem.participants,
                             new MessageBasic(msg._id, msg.body, basicData, msg.timeStamp), 
                             12,
@@ -194,8 +194,9 @@ exports.getConvList = (req, res, next) => {
                     console.log('final list')
                     var e = allLists[0].concat(allLists[1]).concat(allLists[2]);
                     console.log(e);
+                    res.send(e);
+                    
                 })
-            res.send('hahaa');
             // console.log("privateConv ", convLists[0]);
             // console.log("group ", convLists[1]);
             // console.log("channel ", convLists[2]);

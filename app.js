@@ -16,11 +16,15 @@ var socketer = require('./socket/socket');
 var online = require('./socket/onlineuser');
 var onlineUsersData = require('./socket/onlineuserdata');
 var dbAPI = require('./api/dbAPI');
-io.on('connection'
-        , socketioJwt.authorize({
-            secret: require('./routes/config').jwtSecret,
-            timeout: 15000 // 15 seconds to send the authentication message
-        }))
+
+var UserBasic = require('./models/ClassModels/UserBasic');
+var MessageBasic = require('./models/ClassModels/MessageBasic');
+var ConvItemBasic = require('./models/ClassModels/ConvItemBasic');
+
+io.on('connection', socketioJwt.authorize({
+        secret: require('./routes/config').jwtSecret,
+        timeout: 15000 // 15 seconds to send the authentication message
+    }))
     .on('authenticated', function (socket) {
         console.log("---------Auth----------");
         //haha this place is amazing
@@ -32,11 +36,6 @@ io.on('connection'
             userID: socket.decoded_token.userId
         }, (err, user) => {
             if (err) return console.log('cant find usr');
-            // console.log('found user')
-            // console.log(user);
-            //this is just socket + userId + userDataID
-    
-            
             online[user['_id']] = {
                 userID: socket.decoded_token.userId,
                 socketId: socket.id
@@ -67,49 +66,32 @@ app.get('/api/convId', dbAPI.getConversation);
 //accepts userDataID return list of Conv of that user
 app.get('/api/convlist', dbAPI.getConvList);
 
+app.get('/user', (req, res, next) => {
+    res.send({
+        id: "id",
+        name: "name",
+        avatar: "avater",
+        online: true,
+        timeStamp: Date.now()
+    });
+})
 
-app.get('/dum', (req, res, next)=>{
+app.get('/dum', (req, res, next) => {
     console.log('asked');
-    // this.id = id;
-    // this.name = name;
-    // this.avatar = avatar;
-    // this.online = online;
-
     var users = [
-        {
-            _id: "hi",
-            name: "fuck",
-            profPic: "nothing",
-            participants: ["sdf", "abee"],
-            lastMsg: {
-                _id: 'od',
-                text : 'text',
-                user : 'user',
-                timeStamp : Date.now()
-            },
-            unreadCount: 4,
-            type: "GROUPPRIVETE"
-        },
-        {
-            _id: "oowdoi",
-            name: "fuck",
-            profPic: "nothing",
-            participants: ["sdf", "abee"],
-            lastMsg: {
-                _id: 'od',
-                text: 'lst',
-                user: {
-                    id: "id",
-                    name: "name",
-                    avatar: "avater",
-                    online: true
-                },
-                timeStamp: Date.now()
-            },
-            unreadCount: 4,
-            type: "GROUPPRIVETE"
-        },
-
+        new ConvItemBasic('hi', 'woww', 'profiPic', ["sdf", "abee", "woww"], 
+            new MessageBasic('od',
+                'I never seen such a long message in my life',
+                new UserBasic("stand", "Oasis", "profiPic", false), Date.now()),
+            2, "groupConv"
+        ),
+        new ConvItemBasic('hi', 'woww', 'profiPic', ["sdf", "abee"],
+            new MessageBasic('od',
+                'I never seen such a long message in my life',
+                new UserBasic("stand", "Oasis", "profiPic", false), Date.now()),
+            4, "privateConv"
+        )
+        
     ]
     res.send(users);
 });

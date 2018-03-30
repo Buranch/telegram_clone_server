@@ -93,6 +93,7 @@ app.get('/dum', (req, res, next) => {
         )
         
     ]
+    console.log(users); 
     res.send(users);
 });
 app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'));

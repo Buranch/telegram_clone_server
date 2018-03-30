@@ -1,5 +1,6 @@
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
+var Message = require('./MessageMongo');
 var opts = { useMongoClient: true };
 mongoose.Promise = global.Promise;
 // mongoimport --db dbName --collection collectionName --file fileName.json --jsonArray
@@ -17,8 +18,11 @@ var db = mongoose.connection;
 var ConversationSchema = mongoose.Schema({
     name: String,
     participants: Array,
-    pic: String,
-    lastMsg: String
+    profPic: String,
+    lastMsg: Object,
+    type: String,
+    unreadCount: Number
+
 },
     { versionKey: false, id: false }
 );

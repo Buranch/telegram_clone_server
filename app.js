@@ -67,6 +67,52 @@ app.get('/api/convId', dbAPI.getConversation);
 //accepts userDataID return list of Conv of that user
 app.get('/api/convlist', dbAPI.getConvList);
 
+
+app.get('/dum', (req, res, next)=>{
+    console.log('asked');
+    // this.id = id;
+    // this.name = name;
+    // this.avatar = avatar;
+    // this.online = online;
+
+    var users = [
+        {
+            _id: "hi",
+            name: "fuck",
+            profPic: "nothing",
+            participants: ["sdf", "abee"],
+            lastMsg: {
+                _id: 'od',
+                text : 'text',
+                user : 'user',
+                timeStamp : Date.now()
+            },
+            unreadCount: 4,
+            type: "GROUPPRIVETE"
+        },
+        {
+            _id: "oowdoi",
+            name: "fuck",
+            profPic: "nothing",
+            participants: ["sdf", "abee"],
+            lastMsg: {
+                _id: 'od',
+                text: 'lst',
+                user: {
+                    id: "id",
+                    name: "name",
+                    avatar: "avater",
+                    online: true
+                },
+                timeStamp: Date.now()
+            },
+            unreadCount: 4,
+            type: "GROUPPRIVETE"
+        },
+
+    ]
+    res.send(users);
+});
 app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
 

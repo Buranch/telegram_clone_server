@@ -22,7 +22,10 @@ var UserDataSchema = mongoose.Schema({
     userID: String,
     online: Boolean,
     lastSeen: String,
-    convId: Array
+    bio: String,
+    privateConvList: Array,
+    groupConvList: Array,
+    channelConvList: Array,
 },
     { versionKey: false, id: false }
 );
@@ -38,7 +41,11 @@ module.exports.createUser = (ap, callback) => {
         profilePic: "wow.jpg",
         userID: "5a9b6de8c678e3313c89fdb9",
         online: false,
-        lastSeen: "yesterday"
+        lastSeen: "yesterday",
+        bio: "Haha life is awesome",
+        privateConvList: ['5abd3968d1df562ab4bea0ca', '5abd3c40cc5292f4d9d9fab1'],
+        groupConvList: ['5abd3a2f6bb81b047076ec42', '5abd3c82cc5292f4d9d9fb38'],
+        channelConvList: ['5abd3ae4384fbe293ce51061', '5abd3c9fcc5292f4d9d9fb84'],
     })
     console.log("About to create a User");
     ap.save(callback);

@@ -1,12 +1,10 @@
-<<<<<<< HEAD
-//hello this is a comment///
+//hello this is a comment//
+//hello this is biruk's comment//
 const Conversation = require('../models/ConversationMongo');
-=======
 const PrivateConv = require('../models/PrivateConv');
 const GroupConv = require('../models/GroupConv');
 const ChannelConv = require('../models/ChannelConv');
 
->>>>>>> d3d382b985161877aed2e2343b2a7139bded76e3
 const UserData = require('../models/UserDataMongo');
 const ConvItemBasic = require('../models/ClassModels/ConvItemBasic');
 const UserBasic = require('../models/ClassModels/UserBasic');

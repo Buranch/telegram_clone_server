@@ -21,7 +21,8 @@ var ChannelConvSchema = mongoose.Schema({
     bio: String,
     creator: String,
     subscribers: Array,
-    lastMsg: Object
+    lastMsg: Object,
+    messages: Array
 },
     { versionKey: false, id: false }
 );
@@ -44,7 +45,13 @@ module.exports.createChannelConv = (ap, callback) => {
             conversationID: "5aa532ab52c5dd1cd48ff078",
             timeStamp: Date.now(),
             body: "last Msg"
-        })
+        }),
+        messages: [new Message({
+            senderID: "5aa4f2bf26051827082b0296",
+            conversationID: "5aa532ab52c5dd1cd48ff078",
+            timeStamp: Date.now(),
+            body: "last Msg"
+        })]
     });
     console.log("About to create a ChannelConv");
     ap.save(callback);

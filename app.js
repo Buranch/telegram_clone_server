@@ -65,6 +65,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/api/convId', dbAPI.getConversation);
 //accepts userDataID return list of Conv of that user
 app.get('/api/convlist', dbAPI.getConvList);
+//accepts private conversation ID and returns collection of messages
+app.get('/api/privatemsglist',dbAPI.getPrivateMessageList);
+//accepts group conversation ID and returns collection of messages
+app.get('/api/groupmsglist', dbAPI.getGroupMessageList);
+//accepts channel conversation ID and returns collection of messages
+app.get('/api/channelmsglist', dbAPI.getChannelMessageList);
 
 app.get('/user', (req, res, next) => {
     res.send({

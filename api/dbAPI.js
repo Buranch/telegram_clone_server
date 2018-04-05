@@ -6,6 +6,8 @@ const GroupConv = require('../models/GroupConv');
 const ChannelConv = require('../models/ChannelConv');
 
 const UserData = require('../models/UserDataMongo');
+console.log("User Data object");
+console.log(UserData);
 const ConvItemBasic = require('../models/ClassModels/ConvItemBasic');
 const UserBasic = require('../models/ClassModels/UserBasic');
 const MessageBasic = require('../models/ClassModels/MessageBasic');
@@ -50,7 +52,11 @@ const findAllPrivateLists = (privateList, myId) => {
     return new Promise((resolve, reject) => {
         var len = privateList.length;
         var list = []
+        // conv = friendId
         privateList.forEach((conv, index) => {
+            console.log("what is conv "+conv);
+            console.log("what is index "+index);
+            
             PrivateConv.findById(conv,
                 (err, convitem) => {
                     //choose the other id and grab his basic info
@@ -62,6 +68,7 @@ const findAllPrivateLists = (privateList, myId) => {
                         console.log(basicData);
                         //converting the privateConv into readable convItem
                         var msg = convitem.lastMsg;
+                        console.log("convitem.id == conv "+(convitem._id == conv));
                         var e = new ConvItemBasic(
                             convitem._id,
                             basicData.name,
@@ -152,13 +159,15 @@ exports.getConvList = (req, res, next) => {
         })
         .catch((err)=>{
             console.log('sad is it not');
-            res.send('cudnt found');
-        })
+            res.send('coudn\'t found');
+        })  
         //got the User then do grab lists and return private, group, conv order
         .then((userData) => {
             return new Promise(function (resolve, reject) {
                 console.log('on the second promise');
-                console.log(userData.groupConvList);
+                console.log("group conv array "+userData.groupConvList);
+                console.log("channel conv array "+userData.channelConvList);
+                console.log("private conv array "+userData.privateConvList);
                 //passing required user data  eg. all the lists
                 //the user ID that required in privateList operation
                 resolve([
@@ -172,6 +181,7 @@ exports.getConvList = (req, res, next) => {
         //we got all this lists let's do search
         .then((convLists) => {
             console.log("the guy ID ", convLists[0]);
+            //console.log("convList "+convLists[2][0]);
             var allLists = []
             //findAllPrivateLits accepts two params (@privateConvIDlists, @myID)
             //@myID is required to resolve the other user basic info (photo, name) so that 
@@ -247,3 +257,32 @@ exports.getConvList = (req, res, next) => {
 
     })
 };
+exports.getPrivateMessageList = (req,res,next) => {
+    var privateConvId = req.query['id'];
+    console.log("private conversation Id = "+privateConvId);
+    return new Promise(function (resolve, reject) {
+        PrivateConv.findById(privateConvId, (err, privateConv) => {
+            if (err) return reject(err);
+            //found the conversation
+            console.log('====================================================');
+            console.log('conversationName ', privateConvId);
+            console.log('====================================================');
+            resolve(privateConv);
+        });
+    })
+    .catch((error) => {
+        console.log("couldnt find a conversation with "+privateConvId+" id");
+    })
+    .then((privateConv) => {
+        console.log(privateConv);
+        res.send(privateConv);
+    })
+}
+exports.getGroupMessageList = (req, res, next) => {
+    console.log("group conversation Id = " + req.query["id"]);
+    res.send(req.query["id"]);
+}
+exports.getChannelMessageList = (req, res, next) => {
+    console.log("channel conversation Id = " + req.query["id"]);
+    res.send(req.query["id"]);
+}

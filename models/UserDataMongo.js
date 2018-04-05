@@ -35,7 +35,7 @@ var UserData = module.exports = mongoose.model("UserData", UserDataSchema);
 
 module.exports.createUser = (ap, callback) => {
     var ap = new UserData({
-        firstName: "Biruk",
+        firstName: "Henok",
         lastName: "Misganaw",
         userName: "buranch",
         profilePic: "wow.jpg",

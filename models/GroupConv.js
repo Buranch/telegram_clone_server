@@ -20,7 +20,8 @@ var GroupConvSchema = mongoose.Schema({
     profilePic: String,
     bio: String,
     participants: Array,
-    lastMsg: Object
+    lastMsg: Object,
+    messages: Array
 },
     { versionKey: false, id: false }
 );
@@ -42,7 +43,13 @@ module.exports.createGroupConv = (ap, callback) => {
             conversationID: "5aa532ab52c5dd1cd48ff078",
             timeStamp: Date.now(),
             body: "wowwowwww lol."
-        })
+        }),
+        messages: [new Message({
+            senderID: "5aa4f2bf26051827082b0296",
+            timeStamp: Date.now(),
+            body: "wowwowwww lol.",
+            seen:false
+        })]
     });
     console.log("About to create a GroupConv");
     ap.save(callback);

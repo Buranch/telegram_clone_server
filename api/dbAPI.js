@@ -259,30 +259,97 @@ exports.getConvList = (req, res, next) => {
 };
 exports.getPrivateMessageList = (req,res,next) => {
     var privateConvId = req.query['id'];
-    console.log("private conversation Id = "+privateConvId);
     return new Promise(function (resolve, reject) {
         PrivateConv.findById(privateConvId, (err, privateConv) => {
-            if (err) return reject(err);
+            if (err || (privateConv == null)) return reject(err);
             //found the conversation
             console.log('====================================================');
-            console.log('conversationName ', privateConvId);
+            console.log('private conversationID ', privateConvId);
             console.log('====================================================');
             resolve(privateConv);
         });
     })
     .catch((error) => {
-        console.log("couldnt find a conversation with "+privateConvId+" id");
+        console.log("couldnt find a private conversation with "+privateConvId+" id");
     })
     .then((privateConv) => {
-        console.log(privateConv);
-        res.send(privateConv);
+        // console.log(privateConv);
+        // res.send(privateConv);
+        return new Promise(function(resolve,reject){
+            resolve(privateConv.messages);
+        });
+    })
+    .then((privateConvMessages) => {
+        //res.send(privateConvMessages);
+        var messages = [];
+        privateConvMessages.forEach((message,index) => {
+            messages.push(new MessageBasic(message.senderID,message.body,message.seen,message.time));
+        });
+        console.log(messages);
+        res.send(messages);
     })
 }
 exports.getGroupMessageList = (req, res, next) => {
-    console.log("group conversation Id = " + req.query["id"]);
-    res.send(req.query["id"]);
+    var groupConvId = req.query['id'];
+    return new Promise(function (resolve, reject) {
+        GroupConv.findById(groupConvId, (err, groupConv) => {
+            if (err) return reject(err);
+            //found the conversation
+            console.log('====================================================');
+            console.log('group conversationID ', groupConvId);
+            console.log('====================================================');
+            resolve(groupConv);
+        });
+    })
+        .catch((error) => {
+            console.log("couldnt find a group conversation with " + groupConvId + " id");
+        })
+        .then((groupConv) => {
+            // console.log(privateConv);
+            // res.send(privateConv);
+            return new Promise(function (resolve, reject) {
+                resolve(groupConv.messages);
+            });
+        })
+        .then((groupConvMessages) => {
+            //res.send(privateConvMessages);
+            var messages = [];
+            groupConvMessages.forEach((message, index) => {
+                messages.push(new MessageBasic(message.senderID, message.body, message.seen, message.time));
+            });
+            console.log(messages);
+            res.send(messages);
+        })
 }
 exports.getChannelMessageList = (req, res, next) => {
-    console.log("channel conversation Id = " + req.query["id"]);
-    res.send(req.query["id"]);
+    var channelConvId = req.query['id'];
+    return new Promise(function (resolve, reject) {
+        ChannelConv.findById(channelConvId, (err, channelConv) => {
+            if (err) return reject(err);
+            //found the conversation
+            console.log('====================================================');
+            console.log('channel conversationID ', channelConvId);
+            console.log('====================================================');
+            resolve(channelConv);
+        });
+    })
+        .catch((error) => {
+            console.log("couldnt find a channel conversation with " + channelConvId + " id");
+        })
+        .then((channelConv) => {
+             //console.log(channelConv);
+            // res.send(privateConv);
+            return new Promise(function (resolve, reject) {
+                resolve(channelConv.messages);
+            });
+        })
+        .then((channelConvMessages) => {
+            //res.send(privateConvMessages);
+            var messages = [];
+            channelConvMessages.forEach((message, index) => {
+                messages.push(new MessageBasic(message.senderID, message.body, message.seen, message.time));
+            });
+            console.log(messages);
+            res.send(messages);
+        })
 }

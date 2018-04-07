@@ -76,7 +76,7 @@ app.get('/user', (req, res, next) => {
     res.send({
         id: "id",
         name: "name",
-        avatar: "avater",
+        avatar: "Heni Tiblet",
         online: true,
         timeStamp: Date.now()
     });

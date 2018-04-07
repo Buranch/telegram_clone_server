@@ -1,13 +1,11 @@
 class MessageBasic {
-    constructor(_id, text,
-        user,
-        timeStamp) {
+    constructor(_id, body,
+        seen,
+        time) {
         this._id = _id;
-        this.text = text;
-        this.user = user;
-        this.timeStamp = timeStamp;
+        this.body = body;
+        this.time = time;
+        this.seen = seen;
     }
 }
 module.exports = MessageBasic;
-
-

@@ -72,6 +72,9 @@ app.get('/api/groupmsglist', dbAPI.getGroupMessageList);
 //accepts channel conversation ID and returns collection of messages
 app.get('/api/channelmsglist', dbAPI.getChannelMessageList);
 
+//accepts a string search query and returns collection of SearchItem's from Group, Channel and UserData
+app.get('/api/searchPGC', dbAPI.searchForP_G_C);
+
 app.get('/user', (req, res, next) => {
     res.send({
         id: "id",

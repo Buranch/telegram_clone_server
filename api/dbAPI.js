@@ -4,10 +4,9 @@ const Conversation = require('../models/ConversationMongo');
 const PrivateConv = require('../models/PrivateConv');
 const GroupConv = require('../models/GroupConv');
 const ChannelConv = require('../models/ChannelConv');
-
+const SearchItemBasic = require('../models/ClassModels/SearchItemBasic');
 const UserData = require('../models/UserDataMongo');
-console.log("User Data object");
-console.log(UserData);
+
 const ConvItemBasic = require('../models/ClassModels/ConvItemBasic');
 const UserBasic = require('../models/ClassModels/UserBasic');
 const MessageBasic = require('../models/ClassModels/MessageBasic');
@@ -63,6 +62,7 @@ const findAllPrivateLists = (privateList, myId) => {
                     UserBasicInfo(
                         convitem.participants.filter(function (c) { return c != myId })[0]
                     )
+                    
                     .then((basicData)=>{
                         console.log('--------basic-data----------');
                         console.log(basicData);
@@ -114,7 +114,7 @@ const findAllGroupLists = (groupLists) => {
         });
     });
 }
-
+//accepts list of channel conv item ID and returns their full detail. 
 const findAllChannelLists = (channelLists) => {
     return new Promise((resolve, reject) => {
         var len = channelLists.length;
@@ -142,6 +142,7 @@ const findAllChannelLists = (channelLists) => {
     });
 }
 
+//accepts userData ID and return all convItem's in a format of ConvItemBasic. 
 exports.getConvList = (req, res, next) => {
     console.log('getCovList---------------');
     console.log(req.query['id']);
@@ -208,17 +209,8 @@ exports.getConvList = (req, res, next) => {
                     var e = allLists[0].concat(allLists[1]).concat(allLists[2]);
                     console.log(e);
                     res.send(e);
-                    
                 })
-            // console.log("privateConv ", convLists[0]);
-            // console.log("group ", convLists[1]);
-            // console.log("channel ", convLists[2]);
-            // res.send(convLists);
         });
-
-
-
-
     return;
     UserData.findById(req.query['id'], (err, userData) => {
         if (err) return console.log(err);
@@ -352,4 +344,77 @@ exports.getChannelMessageList = (req, res, next) => {
             console.log(messages);
             res.send(messages);
         })
+}
+//accepts a query string and return a group, person or channel which starts with the same string.
+exports.searchForP_G_C = (req, res, next) => {
+    //P stand for Person, G for group, C for channel
+    console.log('searchForPGC');
+    var condition = {
+        firstName: "NotMe"
+    }
+    var allSearchItem = [];
+    //'i' stands for igonre cases
+    console.log(req.query['query'])
+    var query = new RegExp(req.query['query'], 'i');
+    searchUserData(query)
+    //done is all userData SearchItem
+    .then(userDataSearchItem=>{
+        allSearchItem.push(userDataSearchItem);
+        // return searchGroups(query);
+        return searchGroups(query);
+    })
+    //done is all Group SearchItem
+    .then(groupSearchItems=> {
+        allSearchItem.push(groupSearchItems);
+        return searchChannels(query);
+    })
+    // done is all Channel SearchItem
+    .then(channelSearchItems => {
+        allSearchItem.push(channelSearchItems);
+        var e = allSearchItem[0].concat(allSearchItem[1]).concat(allSearchItem[2]);
+        console.log(e);
+        res.send(e);
+    });
+}
+//accepts a query string and returns all related UserData items
+const searchUserData = (query) => {
+    return new Promise((resolve, reject) => {
+        UserData.where('firstName', query).exec((err, done) => {
+            if (err) return reject('unfortunate');
+            //adapt the UserData array with SearchItem and pass to the next promise 
+            var allusers = [];
+            done.forEach(user => {
+                allusers.push(new SearchItemBasic(user._id, user.firstName, user.profilePic, "privateConv"));
+            });
+            resolve(allusers);
+        });
+    });
+
+}
+//accepts a query string and returns all related Groups
+const searchGroups = (query) => {
+    return new Promise((resolve, reject) => {
+        GroupConv.where('name', query).exec((err, done) => {
+            if (err) return reject('unfortunate');
+            var allgroup = [];
+            done.forEach(group => {
+                allgroup.push(new SearchItemBasic(group._id, group.name, group.profilePic, "groupConv"));
+            });
+            //adapt the UserData array with SearchItem and pass to the next promise 
+            resolve(allgroup);
+        });
+    });
+}
+const searchChannels = (query) => {
+    return new Promise((resolve, reject) => {
+        ChannelConv.where('name', query).exec((err, done) => {
+            if (err) return reject('unfortunate');
+            //adapt the UserData array with SearchItem and pass to the next promise 
+            var allchannel = [];
+            done.forEach(channel => {
+                allchannel.push(new SearchItemBasic(channel._id, channel.name, channel.profilePic, "groupConv"));
+            });
+            resolve(allchannel);
+        });
+    });
 }
